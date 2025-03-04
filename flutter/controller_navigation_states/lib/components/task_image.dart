@@ -16,7 +16,9 @@ class TaskImage extends StatelessWidget {
       ),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: Image.asset(picture, fit: BoxFit.cover)),
+          child: picture.contains('http')
+              ? Image.network(picture, fit: BoxFit.cover)
+              : Image.asset(picture, fit: BoxFit.cover)),
     );
   }
 }

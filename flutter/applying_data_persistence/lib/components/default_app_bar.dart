@@ -4,13 +4,19 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   bool? showLevel = false;
   double? currentLevel = 0;
+  List<Widget>? actions;
 
   DefaultAppBar(
-      {required this.title, this.showLevel, this.currentLevel, super.key});
+      {required this.title,
+      this.showLevel,
+      this.currentLevel,
+      this.actions,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      actions: actions,
       title: Padding(
         padding: EdgeInsets.all(8),
         child: showLevel == true
@@ -25,7 +31,7 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 260,
+                        width: actions != null ? 200 : 260,
                         child: LinearProgressIndicator(
                           color: Colors.white,
                           backgroundColor: Colors.black26,

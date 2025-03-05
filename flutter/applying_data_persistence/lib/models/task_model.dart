@@ -1,4 +1,5 @@
 class TaskModel {
+  int? id;
   final String name;
   final String picture;
   final int difficulty;
@@ -6,6 +7,7 @@ class TaskModel {
   int mastery;
 
   TaskModel({
+    this.id,
     required this.name,
     required this.picture,
     required this.difficulty,

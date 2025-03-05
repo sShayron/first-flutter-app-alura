@@ -3,21 +3,28 @@ import 'package:nosso_primeiro_projeto/components/difficult_stars.dart';
 import 'package:nosso_primeiro_projeto/components/task_image.dart';
 import 'package:nosso_primeiro_projeto/components/task_title.dart';
 import 'package:nosso_primeiro_projeto/consts/mastery_colors.dart';
-import 'package:nosso_primeiro_projeto/data/task_inherited.dart';
+import 'package:nosso_primeiro_projeto/data/task_dao.dart';
+import 'package:nosso_primeiro_projeto/models/task_model.dart';
 
 class Task extends StatelessWidget {
+  final int? id;
   final String name;
   final String picture;
   final int difficulty;
   final int level;
   final int mastery;
+  final VoidCallback onDeleteTask;
+  final VoidCallback onLeveledUp;
 
   const Task(
-      {required this.name,
+      {this.id,
+      required this.name,
       required this.picture,
       required this.difficulty,
       required this.level,
       required this.mastery,
+      required this.onDeleteTask,
+      required this.onLeveledUp,
       super.key});
 
   @override
@@ -65,8 +72,30 @@ class Task extends StatelessWidget {
                             ),
                             backgroundColor: Colors.blue),
                         onPressed: () {
-                          TaskInherited.of(context).onLevelUpPressed(name);
+                          _onLevelUpPressed();
                         },
+                        onLongPress: () => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                    'Tem certeza que deseja deletar a task?'),
+                                content: Text('Essa acao e irreversivel'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Nao')),
+                                  TextButton(
+                                      onPressed: () {
+                                        TaskDAO().delete(id!);
+                                        onDeleteTask();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Deletar'))
+                                ],
+                              ),
+                            ),
                         child: Icon(Icons.arrow_upward, color: Colors.white)),
                   )
                 ],
@@ -93,5 +122,29 @@ class Task extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onLevelUpPressed() {
+    int newLevel = 0;
+    int newMastery = 0;
+
+    if ((level / difficulty) == 10 && mastery == 4) return;
+
+    if ((level / difficulty) < 10) {
+      newLevel = level + 1;
+      newMastery = mastery;
+    } else if (mastery < 4) {
+      newMastery = mastery + 1;
+    }
+
+    TaskDAO().save(TaskModel(
+        id: id,
+        name: name,
+        picture: picture,
+        difficulty: difficulty,
+        level: newLevel,
+        mastery: newMastery));
+
+    onLeveledUp();
   }
 }

@@ -1,0 +1,1 @@
+json-server --host [seu-ip] ./db.json 

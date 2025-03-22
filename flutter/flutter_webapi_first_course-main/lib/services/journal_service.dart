@@ -1,45 +1,48 @@
 import 'dart:convert';
 
 import 'package:flutter_webapi_first_course/models/journal.dart';
-import 'package:flutter_webapi_first_course/services/http-interceptors.dart';
+import 'package:flutter_webapi_first_course/services/client.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_interceptor/http/http.dart';
-
-http.Client client = InterceptedClient.build(interceptors: [
-  LoggingInterceptor(),
-]);
 
 class JournalService {
-  static const String url = "http://192.168.96.1:3000/";
-  static const String resource = "journals/";
+  Future<List<Journal>> getAll({required int id}) async {
+    final uri = Client.buildUri("/users/$id/journals");
+    http.Response res = await Client.httpClient.get(uri);
 
-  String getUrl() {
-    return "$url$resource";
+    List<dynamic> body = jsonDecode(res.body);
+    List<Journal> journals = body.map((item) => Journal.fromMap(item)).toList();
+    return journals;
   }
 
-  Future<List<Journal>> getAll() async {
-    http.Response res = await client.get(Uri.parse(getUrl()));
-    if (res.statusCode == 200) {
-      List<dynamic> body = jsonDecode(res.body);
-      List<Journal> journals =
-          body.map((item) => Journal.fromMap(item)).toList();
-      return journals;
-    } else {
-      throw "Failed to load journals";
-    }
-  }
-
-  Future<bool> register(Journal jounal) async {
-    String jsonJournal = json.encode(jounal.toMap());
-    http.Response res = await client.post(
-      Uri.parse(getUrl()),
+  Future<bool> edit(String id, Journal journal) async {
+    journal.updatedAt = DateTime.now();
+    String jsonJournal = json.encode(journal.toMap());
+    final uri = Client.buildUri("/journals/$id");
+    await Client.httpClient.put(
+      uri,
       headers: {"content-type": "application/json"},
       body: jsonJournal,
     );
 
-    if (res.statusCode == 201) {
-      return true;
-    }
-    return false;
+    return true;
+  }
+
+  Future<bool> register(Journal journal) async {
+    String jsonJournal = json.encode(journal.toMap());
+    final uri = Client.buildUri("/journals");
+    await Client.httpClient.post(
+      uri,
+      headers: {"content-type": "application/json"},
+      body: jsonJournal,
+    );
+
+    return true;
+  }
+
+  Future<bool> delete(String id) async {
+    final uri = Client.buildUri("/journals/$id");
+    await Client.httpClient.delete(uri);
+
+    return true;
   }
 }

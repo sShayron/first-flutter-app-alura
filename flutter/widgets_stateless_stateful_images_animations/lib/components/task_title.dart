@@ -10,10 +10,7 @@ class TaskTitle extends StatelessWidget {
         width: 200,
         child: Text(
           name,
-          style: TextStyle(
-            fontSize: 24,
-          ),
-          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.displaySmall,
         ));
   }
 }

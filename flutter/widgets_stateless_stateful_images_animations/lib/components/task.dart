@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nosso_primeiro_projeto/components/difficult_stars.dart';
 import 'package:nosso_primeiro_projeto/components/task_image.dart';
+import 'package:nosso_primeiro_projeto/components/task_progress.dart';
 import 'package:nosso_primeiro_projeto/components/task_title.dart';
 
 class Task extends StatefulWidget {
@@ -69,41 +70,31 @@ class _TaskState extends State<Task> {
                         TaskTitle(name: widget.name),
                         DifficultStars(difficult: widget.difficult)
                       ]),
-                  SizedBox(
-                      height: 52,
-                      child: ElevatedButton(
-                          onPressed: onLevelUpPressed,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(Icons.arrow_drop_up),
-                                Text(
-                                  'UP',
-                                  style: TextStyle(fontSize: 10),
-                                )
-                              ])))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: SizedBox(
+                        height: 52,
+                        child: ElevatedButton(
+                            onPressed: onLevelUpPressed,
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_drop_up,
+                                  ),
+                                  Text(
+                                    'UP',
+                                    style: Theme.of(context)
+                                        .primaryTextTheme
+                                        .labelMedium,
+                                  )
+                                ]))),
+                  )
                 ],
               ),
             ),
-            Padding(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                          width: 200,
-                          child: LinearProgressIndicator(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            backgroundColor: Colors.black26,
-                            value: widget.difficult > 0
-                                ? (level / widget.difficult) / 10
-                                : 1,
-                          )),
-                      Text('Nivel $level',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontSize: 16))
-                    ])),
+            TaskProgress(level: level, difficult: widget.difficult),
           ])
         ],
       ),

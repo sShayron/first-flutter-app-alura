@@ -6,7 +6,18 @@ ThemeData myTheme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(
     primarySwatch: Colors.pink,
   ).copyWith(
-      secondary: Colors.pink[200],
-      surface: Colors.pink[100],
-      onPrimary: Colors.white),
+    secondary: Colors.pink[200],
+    surface: Colors.pink[100],
+    onPrimary: Colors.white,
+  ),
+  textTheme: TextTheme(
+    displaySmall: TextStyle(
+      color: Colors.black,
+      fontSize: 24,
+      overflow: TextOverflow.ellipsis,
+    ),
+  ),
+  primaryTextTheme: TextTheme(
+    labelLarge: TextStyle(fontSize: 16),
+  ),
 );

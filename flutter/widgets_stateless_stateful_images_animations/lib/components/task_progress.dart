@@ -15,12 +15,12 @@ class TaskProgress extends StatelessWidget {
           SizedBox(
               width: 200,
               child: LinearProgressIndicator(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
                 backgroundColor: Colors.black26,
                 value: difficult > 0 ? (level / difficult) / 10 : 1,
               )),
           Text('Nivel $level',
-              style: TextStyle(color: Colors.white, fontSize: 16))
+              style: Theme.of(context).primaryTextTheme.labelLarge)
         ]));
   }
 }

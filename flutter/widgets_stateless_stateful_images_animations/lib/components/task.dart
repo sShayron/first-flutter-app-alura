@@ -38,7 +38,8 @@ class _TaskState extends State<Task> {
 
   @override
   Widget build(BuildContext context) {
-    Color masteryColor = masteryColors[mastery];
+    Color masteryColor =
+        mastery == 0 ? Theme.of(context).primaryColor : masteryColors[mastery];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -55,7 +56,7 @@ class _TaskState extends State<Task> {
               height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,14 +93,16 @@ class _TaskState extends State<Task> {
                       SizedBox(
                           width: 200,
                           child: LinearProgressIndicator(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             backgroundColor: Colors.black26,
                             value: widget.difficult > 0
                                 ? (level / widget.difficult) / 10
                                 : 1,
                           )),
                       Text('Nivel $level',
-                          style: TextStyle(color: Colors.white, fontSize: 16))
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 16))
                     ])),
           ])
         ],

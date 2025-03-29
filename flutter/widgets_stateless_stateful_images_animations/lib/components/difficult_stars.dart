@@ -12,8 +12,9 @@ class DifficultStars extends StatelessWidget {
     return Row(
         children: stars
             .map((starNumber) => DifficultStar(
-                color:
-                    difficult >= starNumber ? Colors.blue : Colors.blue[100]))
+                color: difficult >= starNumber
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).disabledColor))
             .toList());
   }
 }

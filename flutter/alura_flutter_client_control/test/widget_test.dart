@@ -1,30 +1,63 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:client_control/components/hamburger_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:client_control/main.dart';
+import 'package:client_control/components/icon_picker.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('HamburguerMenu', () {
+    testWidgets('should display all menu options', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: HamburgerMenu(),
+        ),
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(find.text('Menu'), findsOneWidget);
+      expect(find.text('Gerenciar clientes'), findsOneWidget);
+      expect(find.text('Tipos de clientes'), findsOneWidget);
+      expect(find.text('Sair'), findsOneWidget);
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('IconPicker', () {
+    testWidgets('showIconPicker displays all icons and allows selection',
+        (WidgetTester tester) async {
+      IconData? selectedIcon;
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Create a test widget to host the dialog
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () async {
+                selectedIcon = await showIconPicker(
+                  context: context,
+                  defalutIcon: Icons.card_giftcard,
+                );
+              },
+              child: const Text('Open Icon Picker'),
+            ),
+          ),
+        ),
+      );
+
+      // Tap the button to open the dialog
+      await tester.tap(find.text('Open Icon Picker'));
+      await tester.pumpAndSettle();
+
+      // Verify the dialog is displayed
+      expect(find.text('Escolha um ícone'), findsOneWidget);
+
+      // Verify all icons are displayed
+      expect(
+          find.byType(IconButton), findsNWidgets(25)); // Total number of icons
+
+      // Tap on an icon to select it
+      await tester.tap(find.byIcon(Icons.credit_card));
+      await tester.pumpAndSettle();
+
+      // Verify the selected icon is returned
+      expect(selectedIcon, Icons.credit_card);
+    });
   });
 }

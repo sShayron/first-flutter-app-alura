@@ -50,7 +50,7 @@ class _ClientsPageState extends State<ClientsPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo,
         onPressed: () {
-          createType(context);
+          createClient(context);
         },
         tooltip: 'Add Tipo',
         child: const Icon(Icons.add),
@@ -58,7 +58,7 @@ class _ClientsPageState extends State<ClientsPage> {
     );
   }
 
-  void createType(context) {
+  void createClient(context) {
     TextEditingController nomeInput = TextEditingController();
     TextEditingController emailInput = TextEditingController();
     Types typesProvider = Provider.of<Types>(context, listen: false);

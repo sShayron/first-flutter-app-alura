@@ -58,24 +58,28 @@ void main() {
     // Testando navegação para a tela de clientes
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
+
     expect(find.text('Gerenciar clientes'), findsOneWidget);
     await tester.tap(find.text('Gerenciar clientes'));
     await tester.pumpAndSettle();
+
     expect(find.text('Clientes'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
     // Testando criação de novo cliente
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
+
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Cadastrar cliente'), findsOneWidget);
     expect(find.text('Salvar'), findsOneWidget);
-    final nameInput = find.byType(TextFormField).at(0);
-    final emailInput = find.byType(TextFormField).at(1);
+    final nameInput = find.byKey(const Key('nameInput'));
+    final emailInput = find.byKey(const Key('emailInput'));
     await tester.enterText(nameInput, 'Shayron');
     await tester.enterText(emailInput, 'a@a.com');
     await tester.tap(find.byIcon(Icons.arrow_downward));
     await tester.pumpAndSettle();
+
     expect(find.text('Platinum'), findsNWidgets(2));
     expect(find.text('Golden'), findsOneWidget);
     expect(find.text('Titanium'), findsOneWidget);
@@ -87,6 +91,7 @@ void main() {
 
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
+
     expect(find.text('Shayron (Ferro)'), findsOneWidget);
     expect(find.byIcon(Icons.card_giftcard), findsOneWidget);
   });

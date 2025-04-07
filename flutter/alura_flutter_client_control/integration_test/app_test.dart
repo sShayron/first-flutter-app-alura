@@ -1,13 +1,18 @@
+import 'package:client_control/models/clients.dart';
+import 'package:client_control/models/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:client_control/main.dart' as app;
+import 'package:provider/provider.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Testando o app', (WidgetTester tester) async {
-    app.main();
+    final providerKey = GlobalKey<NavigatorState>();
+
+    app.main(list: [], providerKey: providerKey);
     await tester.pumpAndSettle();
 
     // Testando se a tela inicial
@@ -55,6 +60,20 @@ void main() {
     expect(find.text('Ferro'), findsOneWidget);
     expect(find.byIcon(Icons.card_giftcard), findsOneWidget);
 
+    // Testa se o provider de tipos de clientes foi atualizado
+    expect(
+        Provider.of<Types>(providerKey.currentContext!, listen: false)
+            .types
+            .last
+            .name,
+        'Ferro');
+    expect(
+        Provider.of<Types>(providerKey.currentContext!, listen: false)
+            .types
+            .last
+            .icon,
+        Icons.card_giftcard);
+
     // Testando navegação para a tela de clientes
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
@@ -92,7 +111,42 @@ void main() {
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
 
+    // Testa se o provider de tipos de clientes foi atualizado
+    expect(
+        Provider.of<Clients>(providerKey.currentContext!, listen: false)
+            .clients
+            .last
+            .name,
+        'Shayron');
+    expect(
+        Provider.of<Clients>(providerKey.currentContext!, listen: false)
+            .clients
+            .last
+            .email,
+        'a@a.com');
+    expect(
+        Provider.of<Clients>(providerKey.currentContext!, listen: false)
+            .clients
+            .last
+            .type
+            .icon,
+        Icons.card_giftcard);
+    expect(
+        Provider.of<Clients>(providerKey.currentContext!, listen: false)
+            .clients
+            .last
+            .type
+            .name,
+        'Ferro');
+
     expect(find.text('Shayron (Ferro)'), findsOneWidget);
     expect(find.byIcon(Icons.card_giftcard), findsOneWidget);
+
+    // Testando remoção de cliente
+    await tester.drag(find.text('Shayron (Ferro)'), const Offset(500, 0));
+    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+
+    expect(find.text('Shayron (Ferro)'), findsNothing);
+    expect(find.byIcon(Icons.card_giftcard), findsNothing);
   });
 }
